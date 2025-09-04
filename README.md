@@ -1,61 +1,104 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# UserFlow API (Laravel 12 + Sail)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This project implements a RESTful API for user and address management, built with Laravel 12 and PHP 8.3, designed for development with Laravel Sail (Docker).
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+-   **Layered Architecture:** Strict separation of Controllers, Services, and Repositories for clear responsibilities.
+-   **S.O.L.I.D. Principles:** Adherence to S.O.L.I.D. principles, especially Single Responsibility and Dependency Inversion.
+-   **Test-Driven Development (TDD):** Comprehensive feature tests using Pest for all API endpoints, covering success, validation errors, not found, and unauthorized scenarios.
+-   **Form Requests:** Robust input validation using Laravel Form Requests.
+-   **API Resources:** Standardized JSON responses and prevention of sensitive data leakage using Laravel API Resources.
+-   **Authentication:** Secure API authentication powered by Laravel Sanctum.
+-   **Repository Pattern:** Abstraction of database access with interfaces for better maintainability and testability.
+-   **Soft Deletes:** Users can be soft-deleted, allowing for recovery.
+-   **Policies:** Fine-grained authorization control for user and address management.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Prerequisites
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Before you begin, ensure you have the following installed on your system:
 
-## Learning Laravel
+-   [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Installation and Execution
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Follow these steps to set up and run the project:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1.  **Clone the repository:**
+    ```bash
+    git clone <your-repository-url>
+    cd teste-target
+    ```
 
-## Laravel Sponsors
+2.  **Install Composer dependencies:**
+    ```bash
+    docker run --rm \
+        -u "$(id -u):$(id -g)" \
+        -v "$(pwd):/var/www/html" \
+        -w /var/www/html \
+        laravelsail/php83-composer:latest \
+        composer install --ignore-platform-reqs
+    ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+3.  **Start Laravel Sail (Docker containers):**
+    ```bash
+    ./vendor/bin/sail up -d
+    ```
 
-### Premium Partners
+4.  **Copy the environment file:**
+    ```bash
+    cp .env.example .env
+    ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+5.  **Generate the application key:**
+    ```bash
+    ./vendor/bin/sail artisan key:generate
+    ```
 
-## Contributing
+6.  **Run database migrations and seed the database:**
+    ```bash
+    ./vendor/bin/sail artisan migrate --seed
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    _Note: The seeder will create an admin user (`admin@example.com` / `password`) and 5 regular users with 2 addresses each._
 
-## Code of Conduct
+7.  **Access the API:**
+    The API will be available at `http://localhost` (or the port configured in your `.env` file).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Running Tests
 
-## Security Vulnerabilities
+To run the feature tests, execute the following command:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+./vendor/bin/sail test
+```
 
-## License
+## API Documentation
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Authentication
+
+| Endpoint | HTTP Verb | Description | Example Payload | Example Response |
+| :------- | :-------- | :---------- | :-------------- | :--------------- |
+| `/api/login` | `POST` | Authenticate a user and return an API token. | `{"email": "user@example.com", "password": "password"}` | `{"message": "Login successful", "token": "...", "user": {...}}` |
+| `/api/logout` | `POST` | Revoke the current user's API token. | (None) | `{"message": "Logout successful"}` |
+| `/api/me` | `GET` | Get the authenticated user's profile. | (None) | `{"data": {...}}` |
+
+### Users
+
+| Endpoint | HTTP Verb | Description | Example Payload | Example Response |
+| :------- | :-------- | :---------- | :-------------- | :--------------- |
+| `/api/users` | `POST` | Register a new user. (Public route) | `{"name": "John Doe", "email": "john@example.com", "password": "password", "password_confirmation": "password", "cpf": "12345678901", "phone": "11987654321"}` | `{"data": {...}}` (Status 201) |
+| `/api/users` | `GET` | Get a list of all users. (Admin only) | (None) | `{"data": [{...}, {...}]}` |
+| `/api/users/{id}` | `GET` | Get a specific user's profile. (Self or Admin) | (None) | `{"data": {...}}` |
+| `/api/users/{id}` | `PUT` | Update a user's profile. (Self or Admin) | `{"name": "Updated Name", "phone": "9988776655"}` | `{"data": {...}}` |
+| `/api/users/{id}` | `DELETE` | Soft delete a user. (Self or Admin) | (None) | (Status 204, No Content) |
+
+### Addresses
+
+| Endpoint | HTTP Verb | Description | Example Payload | Example Response |
+| :------- | :-------- | :---------- | :-------------- | :--------------- |
+| `/api/users/{user_id}/addresses` | `GET` | Get all addresses for a specific user. (Self or Admin) | (None) | `{"data": [{...}, {...}]}` |
+| `/api/users/{user_id}/addresses` | `POST` | Create a new address for a user. (Self or Admin) | `{"street": "Main St", "number": "123", "neighborhood": "Downtown", "complement": "Apt 1", "zip_code": "12345-678"}` | `{"data": {...}}` (Status 201) |
+| `/api/users/{user_id}/addresses/{id}` | `GET` | Get a specific address for a user. (Self or Admin) | (None) | `{"data": {...}}` |
+| `/api/users/{user_id}/addresses/{id}` | `PUT` | Update a specific address for a user. (Self or Admin) | `{"street": "New Street", "number": "456"}` | `{"data": {...}}` |
+| `/api/users/{user_id}/addresses/{id}` | `DELETE` | Delete a specific address for a user. (Self or Admin) | (None) | (Status 204, No Content) |
