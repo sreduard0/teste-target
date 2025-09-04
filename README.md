@@ -1,36 +1,36 @@
-# UserFlow API (Laravel 12 + Sail)
+# API UserFlow (Laravel 12 + Sail)
 
-This project implements a RESTful API for user and address management, built with Laravel 12 and PHP 8.3, designed for development with Laravel Sail (Docker).
+Este projeto implementa uma API RESTful para gerenciamento de usuários e endereços, construído com Laravel 12 e PHP 8.3, e projetado para desenvolvimento com Laravel Sail (Docker).
 
-## Features
+## Funcionalidades
 
--   **Layered Architecture:** Strict separation of Controllers, Services, and Repositories for clear responsibilities.
--   **S.O.L.I.D. Principles:** Adherence to S.O.L.I.D. principles, especially Single Responsibility and Dependency Inversion.
--   **Test-Driven Development (TDD):** Comprehensive feature tests using Pest for all API endpoints, covering success, validation errors, not found, and unauthorized scenarios.
--   **Form Requests:** Robust input validation using Laravel Form Requests.
--   **API Resources:** Standardized JSON responses and prevention of sensitive data leakage using Laravel API Resources.
--   **Authentication:** Secure API authentication powered by Laravel Sanctum.
--   **Repository Pattern:** Abstraction of database access with interfaces for better maintainability and testability.
--   **Soft Deletes:** Users can be soft-deleted, allowing for recovery.
--   **Policies:** Fine-grained authorization control for user and address management.
+-   **Arquitetura em Camadas:** Separação estrita de Controllers, Services e Repositories para responsabilidades claras.
+-   **Princípios S.O.L.I.D.:** Aderência aos princípios S.O.L.I.D., especialmente Responsabilidade Única e Inversão de Dependência.
+-   **Desenvolvimento Orientado a Testes (TDD):** Testes de funcionalidade abrangentes usando Pest para todos os endpoints da API, cobrindo cenários de sucesso, erros de validação, não encontrado e não autorizado.
+-   **Form Requests:** Validação de entrada robusta usando Form Requests do Laravel.
+-   **API Resources:** Respostas JSON padronizadas e prevenção de vazamento de dados sensíveis usando API Resources do Laravel.
+-   **Autenticação:** Autenticação de API segura com Laravel Sanctum.
+-   **Padrão Repository:** Abstração do acesso ao banco de dados com interfaces para melhor manutenibilidade e testabilidade.
+-   **Soft Deletes:** Usuários podem ser excluídos de forma lógica (*soft-deleted*), permitindo recuperação.
+-   **Policies:** Controle de autorização refinado para gerenciamento de usuários e endereços.
 
-## Prerequisites
+## Pré-requisitos
 
-Before you begin, ensure you have the following installed on your system:
+Antes de começar, certifique-se de ter o seguinte instalado em seu sistema:
 
 -   [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
-## Installation and Execution
+## Instalação e Execução
 
-Follow these steps to set up and run the project:
+Siga estes passos para configurar e executar o projeto:
 
-1.  **Clone the repository:**
+1.  **Clone o repositório:**
     ```bash
-    git clone <your-repository-url>
+    git clone <url-do-seu-repositorio>
     cd teste-target
     ```
 
-2.  **Install Composer dependencies:**
+2.  **Instale as dependências do Composer:**
     ```bash
     docker run --rm \
         -u "$(id -u):$(id -g)" \
@@ -40,65 +40,34 @@ Follow these steps to set up and run the project:
         composer install --ignore-platform-reqs
     ```
 
-3.  **Start Laravel Sail (Docker containers):**
+3.  **Inicie o Laravel Sail (contêineres Docker):**
     ```bash
     ./vendor/bin/sail up -d
     ```
 
-4.  **Copy the environment file:**
+4.  **Copie o arquivo de ambiente:**
     ```bash
     cp .env.example .env
     ```
 
-5.  **Generate the application key:**
+5.  **Gere a chave da aplicação:**
     ```bash
     ./vendor/bin/sail artisan key:generate
     ```
 
-6.  **Run database migrations and seed the database:**
+6.  **Execute as migrações e popule o banco de dados:**
     ```bash
     ./vendor/bin/sail artisan migrate --seed
     ```
 
-    _Note: The seeder will create an admin user (`admin@example.com` / `password`) and 5 regular users with 2 addresses each._
+    *Nota: O seeder criará um usuário administrador (`admin@example.com` / `password`) e 5 usuários comuns com 2 endereços cada.*
 
-7.  **Access the API:**
-    The API will be available at `http://localhost` (or the port configured in your `.env` file).
+7.  **Acesse a API:**
+    A API estará disponível em `http://localhost` (ou na porta configurada em seu arquivo `.env`).
 
-## Running Tests
+## Executando Testes
 
-To run the feature tests, execute the following command:
+Para executar os testes de funcionalidade, execute o seguinte comando:
 
 ```bash
 ./vendor/bin/sail test
-```
-
-## API Documentation
-
-### Authentication
-
-| Endpoint | HTTP Verb | Description | Example Payload | Example Response |
-| :------- | :-------- | :---------- | :-------------- | :--------------- |
-| `/api/login` | `POST` | Authenticate a user and return an API token. | `{"email": "user@example.com", "password": "password"}` | `{"message": "Login successful", "token": "...", "user": {...}}` |
-| `/api/logout` | `POST` | Revoke the current user's API token. | (None) | `{"message": "Logout successful"}` |
-| `/api/me` | `GET` | Get the authenticated user's profile. | (None) | `{"data": {...}}` |
-
-### Users
-
-| Endpoint | HTTP Verb | Description | Example Payload | Example Response |
-| :------- | :-------- | :---------- | :-------------- | :--------------- |
-| `/api/users` | `POST` | Register a new user. (Public route) | `{"name": "John Doe", "email": "john@example.com", "password": "password", "password_confirmation": "password", "cpf": "12345678901", "phone": "11987654321"}` | `{"data": {...}}` (Status 201) |
-| `/api/users` | `GET` | Get a list of all users. (Admin only) | (None) | `{"data": [{...}, {...}]}` |
-| `/api/users/{id}` | `GET` | Get a specific user's profile. (Self or Admin) | (None) | `{"data": {...}}` |
-| `/api/users/{id}` | `PUT` | Update a user's profile. (Self or Admin) | `{"name": "Updated Name", "phone": "9988776655"}` | `{"data": {...}}` |
-| `/api/users/{id}` | `DELETE` | Soft delete a user. (Self or Admin) | (None) | (Status 204, No Content) |
-
-### Addresses
-
-| Endpoint | HTTP Verb | Description | Example Payload | Example Response |
-| :------- | :-------- | :---------- | :-------------- | :--------------- |
-| `/api/users/{user_id}/addresses` | `GET` | Get all addresses for a specific user. (Self or Admin) | (None) | `{"data": [{...}, {...}]}` |
-| `/api/users/{user_id}/addresses` | `POST` | Create a new address for a user. (Self or Admin) | `{"street": "Main St", "number": "123", "neighborhood": "Downtown", "complement": "Apt 1", "zip_code": "12345-678"}` | `{"data": {...}}` (Status 201) |
-| `/api/users/{user_id}/addresses/{id}` | `GET` | Get a specific address for a user. (Self or Admin) | (None) | `{"data": {...}}` |
-| `/api/users/{user_id}/addresses/{id}` | `PUT` | Update a specific address for a user. (Self or Admin) | `{"street": "New Street", "number": "456"}` | `{"data": {...}}` |
-| `/api/users/{user_id}/addresses/{id}` | `DELETE` | Delete a specific address for a user. (Self or Admin) | (None) | (Status 204, No Content) |
