@@ -1,4 +1,4 @@
-# Technical Challenge: REST API for User and Address Management
+uardo# Technical Challenge: REST API for User and Address Management
 
 This project implements a RESTful API for managing users and their respective addresses, with JWT authentication. It was developed using Laravel 12 and PHP 8+, with support for Laravel Sail for the development environment.
 
@@ -156,10 +156,5 @@ To stop the Docker containers:
 ./vendor/bin/sail down
 ```
 
-## 🤝 Contributing
-
-Instructions on how to contribute to the project (optional).
-
-## 📄 License
-
-Project license information (optional).
+## 🤝 Developer
+Eduardo Martins

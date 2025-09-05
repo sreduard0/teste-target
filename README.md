@@ -156,10 +156,6 @@ Para parar os containers Docker:
 ./vendor/bin/sail down
 ```
 
-## 🤝 Contribuição
+## 🤝 Developer
 
-Instruções sobre como contribuir para o projeto (opcional).
-
-## 📄 Licença
-
-Informações sobre a licença do projeto (opcional).
+Eduardo Martins
