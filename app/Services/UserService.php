@@ -4,14 +4,14 @@ namespace App\Services;
 
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
-use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 
 class UserService
 {
     /**
      * @var UserRepositoryInterface
      */
-    protected $userRepository;
+    protected UserRepositoryInterface $userRepository;
 
     /**
      * UserService constructor.
@@ -26,7 +26,7 @@ class UserService
     /**
      * Get all users.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection<int, Model>
      */
     public function getAllUsers(): Collection
     {
@@ -37,9 +37,9 @@ class UserService
      * Find a user by ID.
      *
      * @param int $id
-     * @return \App\Models\User|null
+     * @return Model|null
      */
-    public function findUserById(int $id): ?User
+    public function findUserById(int $id): ?Model
     {
         return $this->userRepository->findById($id);
     }
@@ -48,9 +48,9 @@ class UserService
      * Create a new user.
      *
      * @param array $data
-     * @return \App\Models\User
+     * @return Model
      */
-    public function createUser(array $data): User
+    public function createUser(array $data): Model
     {
         return $this->userRepository->create($data);
     }
@@ -60,15 +60,15 @@ class UserService
      *
      * @param int $id
      * @param array $data
-     * @return \App\Models\User|null
+     * @return Model|null
      */
-    public function updateUser(int $id, array $data): ?User
+    public function updateUser(int $id, array $data): ?Model
     {
         return $this->userRepository->update($id, $data);
     }
 
     /**
-     * Delete a user by ID.
+     * Delete a user.
      *
      * @param int $id
      * @return bool

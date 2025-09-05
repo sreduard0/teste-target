@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -23,12 +22,15 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userId = $this->route('user') ? $this->route('user')->id : null;
+        $userId = $this->route('user');
+        if ($userId instanceof \App\Models\User) {
+            $userId = $userId->id;
+        }
 
         return [
             'name' => ['sometimes', 'string', 'max:255'],
             'email' => ['sometimes', 'string', 'email', 'max:255', Rule::unique('users')->ignore($userId)],
-            'password' => ['sometimes', 'string', Password::min(8)->mixedCase()->numbers()->symbols(), 'confirmed'],
+            'password' => ['sometimes', 'string', 'min:8'],
             'phone' => ['nullable', 'string', 'max:20'],
             'cpf' => ['sometimes', 'string', 'max:14', Rule::unique('users')->ignore($userId)],
             'role' => ['sometimes', 'string', 'in:admin,user'],

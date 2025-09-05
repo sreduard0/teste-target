@@ -4,14 +4,14 @@ namespace App\Services;
 
 use App\Repositories\Contracts\AddressRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
-use App\Models\Address;
+use Illuminate\Database\Eloquent\Model;
 
 class AddressService
 {
     /**
      * @var AddressRepositoryInterface
      */
-    protected $addressRepository;
+    protected AddressRepositoryInterface $addressRepository;
 
     /**
      * AddressService constructor.
@@ -27,7 +27,7 @@ class AddressService
      * Get all addresses for a specific user.
      *
      * @param int $userId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection<int, Model>
      */
     public function getAddressesByUser(int $userId): Collection
     {
@@ -38,9 +38,9 @@ class AddressService
      * Find an address by ID.
      *
      * @param int $id
-     * @return \App\Models\Address|null
+     * @return Model|null
      */
-    public function findAddressById(int $id): ?Address
+    public function findAddressById(int $id): ?Model
     {
         return $this->addressRepository->findById($id);
     }
@@ -49,9 +49,9 @@ class AddressService
      * Create a new address.
      *
      * @param array $data
-     * @return \App\Models\Address
+     * @return Model
      */
-    public function createAddress(array $data): Address
+    public function createAddress(array $data): Model
     {
         return $this->addressRepository->create($data);
     }
@@ -61,15 +61,15 @@ class AddressService
      *
      * @param int $id
      * @param array $data
-     * @return \App\Models\Address|null
+     * @return Model|null
      */
-    public function updateAddress(int $id, array $data): ?Address
+    public function updateAddress(int $id, array $data): ?Model
     {
         return $this->addressRepository->update($id, $data);
     }
 
     /**
-     * Delete an address by ID.
+     * Delete an address.
      *
      * @param int $id
      * @return bool

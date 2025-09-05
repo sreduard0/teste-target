@@ -2,45 +2,48 @@
 
 namespace App\Repositories\Contracts;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+
 interface UserRepositoryInterface
 {
     /**
      * Get all users.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection<int, Model>
      */
-    public function getAll();
+    public function getAll(): Collection;
 
     /**
      * Find a user by ID.
      *
      * @param int $id
-     * @return \App\Models\User|null
+     * @return Model|null
      */
-    public function findById(int $id);
+    public function findById(int $id): ?Model;
 
     /**
      * Create a new user.
      *
      * @param array $data
-     * @return \App\Models\User
+     * @return Model
      */
-    public function create(array $data);
+    public function create(array $data): Model;
 
     /**
      * Update an existing user.
      *
      * @param int $id
      * @param array $data
-     * @return \App\Models\User|null
+     * @return Model|null
      */
-    public function update(int $id, array $data);
+    public function update(int $id, array $data): ?Model;
 
     /**
-     * Delete a user by ID.
+     * Delete a user.
      *
      * @param int $id
      * @return bool
      */
-    public function delete(int $id);
+    public function delete(int $id): bool;
 }

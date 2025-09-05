@@ -5,6 +5,7 @@ namespace App\Repositories\Eloquent;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface
@@ -12,7 +13,7 @@ class UserRepository implements UserRepositoryInterface
     /**
      * Get all users.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection<int, Model>
      */
     public function getAll(): Collection
     {
@@ -23,9 +24,9 @@ class UserRepository implements UserRepositoryInterface
      * Find a user by ID.
      *
      * @param int $id
-     * @return \App\Models\User|null
+     * @return Model|null
      */
-    public function findById(int $id): ?User
+    public function findById(int $id): ?Model
     {
         return User::find($id);
     }
@@ -34,9 +35,9 @@ class UserRepository implements UserRepositoryInterface
      * Create a new user.
      *
      * @param array $data
-     * @return \App\Models\User
+     * @return Model
      */
-    public function create(array $data): User
+    public function create(array $data): Model
     {
         $data['password'] = Hash::make($data['password']);
         return User::create($data);
@@ -47,9 +48,9 @@ class UserRepository implements UserRepositoryInterface
      *
      * @param int $id
      * @param array $data
-     * @return \App\Models\User|null
+     * @return Model|null
      */
-    public function update(int $id, array $data): ?User
+    public function update(int $id, array $data): ?Model
     {
         $user = User::find($id);
         if ($user) {
@@ -62,13 +63,17 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * Delete a user by ID.
+     * Delete a user.
      *
      * @param int $id
      * @return bool
      */
     public function delete(int $id): bool
     {
-        return User::destroy($id) > 0;
+        $user = User::find($id);
+        if ($user) {
+            return $user->delete();
+        }
+        return false;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Repositories\Eloquent;
 use App\Models\Address;
 use App\Repositories\Contracts\AddressRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class AddressRepository implements AddressRepositoryInterface
 {
@@ -12,7 +13,7 @@ class AddressRepository implements AddressRepositoryInterface
      * Get all addresses for a specific user.
      *
      * @param int $userId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection<int, Model>
      */
     public function getByUser(int $userId): Collection
     {
@@ -23,9 +24,9 @@ class AddressRepository implements AddressRepositoryInterface
      * Find an address by ID.
      *
      * @param int $id
-     * @return \App\Models\Address|null
+     * @return Model|null
      */
-    public function findById(int $id): ?Address
+    public function findById(int $id): ?Model
     {
         return Address::find($id);
     }
@@ -34,9 +35,9 @@ class AddressRepository implements AddressRepositoryInterface
      * Create a new address.
      *
      * @param array $data
-     * @return \App\Models\Address
+     * @return Model
      */
-    public function create(array $data): Address
+    public function create(array $data): Model
     {
         return Address::create($data);
     }
@@ -46,9 +47,9 @@ class AddressRepository implements AddressRepositoryInterface
      *
      * @param int $id
      * @param array $data
-     * @return \App\Models\Address|null
+     * @return Model|null
      */
-    public function update(int $id, array $data): ?Address
+    public function update(int $id, array $data): ?Model
     {
         $address = Address::find($id);
         if ($address) {
@@ -58,13 +59,17 @@ class AddressRepository implements AddressRepositoryInterface
     }
 
     /**
-     * Delete an address by ID.
+     * Delete an address.
      *
      * @param int $id
      * @return bool
      */
     public function delete(int $id): bool
     {
-        return Address::destroy($id) > 0;
+        $address = Address::find($id);
+        if ($address) {
+            return $address->delete();
+        }
+        return false;
     }
 }

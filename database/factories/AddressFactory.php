@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Address;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -12,13 +11,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class AddressFactory extends Factory
 {
     /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = Address::class;
-
-    /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
@@ -26,10 +18,10 @@ class AddressFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'user_id' => \App\Models\User::factory(),
             'street' => fake()->streetName(),
             'number' => fake()->buildingNumber(),
-            'neighborhood' => fake()->city(),
+            'neighborhood' => fake()->cityPrefix(),
             'complement' => fake()->secondaryAddress(),
             'zip_code' => fake()->postcode(),
         ];

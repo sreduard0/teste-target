@@ -26,7 +26,7 @@ Siga estes passos para configurar e executar o projeto:
 
 1.  **Clone o repositório:**
     ```bash
-    git clone <url-do-seu-repositorio>
+    git clone https://github.com/sreduard0/teste-target.git
     cd teste-target
     ```
 
