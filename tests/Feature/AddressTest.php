@@ -4,21 +4,18 @@ namespace Tests\Feature;
 
 use App\Models\Address;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use PHPUnit\Framework\Attributes\TestDox;
 use Tests\TestCase;
 
 class AddressTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use WithFaker, DatabaseTransactions;
 
-    /**
-     * @testdox Deve listar todos os endereços de um usuário específico.
-     * Verifica se a API retorna corretamente todos os endereços associados a um usuário.
-     * Garante que apenas os endereços do usuário alvo são listados.
-     * @return void
-     */
+    #[TestDox('Deve listar todos os endereços de um usuário específico.')]
+    // Verifica se a API retorna corretamente todos os endereços associados a um usuário.
+    // Garante que apenas os endereços do usuário alvo são listados.
     public function it_should_list_all_addresses_for_a_specific_user(): void
     {
         $user = User::factory()->create();

@@ -3,14 +3,14 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use PHPUnit\Framework\Attributes\TestDox;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use WithFaker, DatabaseTransactions;
 
     #[TestDox('Deve permitir que um usuário faça login com credenciais válidas.')]
     // Verifica se o login retorna um token e os dados do usuário com status 200.
