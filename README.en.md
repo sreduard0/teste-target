@@ -1,104 +1,165 @@
-# UserFlow API (Laravel 12 + Sail)
+# Technical Challenge: REST API for User and Address Management
 
-This project implements a RESTful API for user and address management, built with Laravel 12 and PHP 8.3, designed for development with Laravel Sail (Docker).
+This project implements a RESTful API for managing users and their respective addresses, with JWT authentication. It was developed using Laravel 12 and PHP 8+, with support for Laravel Sail for the development environment.
 
-## Features
+## 🚀 Getting Started
 
--   **Layered Architecture:** Strict separation of Controllers, Services, and Repositories for clear responsibilities.
--   **S.O.L.I.D. Principles:** Adherence to S.O.L.I.D. principles, especially Single Responsibility and Dependency Inversion.
--   **Test-Driven Development (TDD):** Comprehensive feature tests using Pest for all API endpoints, covering success, validation errors, not found, and unauthorized scenarios.
--   **Form Requests:** Robust input validation using Laravel Form Requests.
--   **API Resources:** Standardized JSON responses and prevention of sensitive data leakage using Laravel API Resources.
--   **Authentication:** Secure API authentication powered by Laravel Sanctum.
--   **Repository Pattern:** Abstraction of database access with interfaces for better maintainability and testability.
--   **Soft Deletes:** Users can be soft-deleted, allowing for recovery.
--   **Policies:** Fine-grained authorization control for user and address management.
+Follow the instructions below to set up and run the project in your local environment.
 
-## Prerequisites
+### Prerequisites
 
-Before you begin, ensure you have the following installed on your system:
+Make sure you have the following software installed on your machine:
 
--   [Docker Desktop](https://www.docker.com/products/docker-desktop)
+*   **Docker Desktop:** Required to run Laravel Sail.
+*   **PHP (optional, but recommended for Composer):** Version 8.2 or higher.
+*   **Composer:** PHP dependency manager.
+*   **Node.js and npm/Yarn (optional, for frontend if applicable):** To compile assets, although it's not the main focus of this API.
 
-## Installation and Execution
-
-Follow these steps to set up and run the project:
+### Installation and Configuration
 
 1.  **Clone the repository:**
     ```bash
     git clone https://github.com/sreduard0/teste-target.git
-    cd teste-target
+    cd teste-target # Or your project folder name
     ```
 
 2.  **Install Composer dependencies:**
     ```bash
-    docker run --rm \
-        -u "$(id -u):$(id -g)" \
-        -v "$(pwd):/var/www/html" \
-        -w /var/www/html \
-        laravelsail/php83-composer:latest \
-        composer install --ignore-platform-reqs
+    composer install
     ```
 
-3.  **Start Laravel Sail (Docker containers):**
-    ```bash
-    ./vendor/bin/sail up -d
-    ```
-
-4.  **Copy the environment file:**
+3.  **Configure the environment:**
+    Create the `.env` file from `.env.example`:
     ```bash
     cp .env.example .env
     ```
 
-5.  **Generate the application key:**
+4.  **Generate the application key:**
     ```bash
-    ./vendor/bin/sail artisan key:generate
+    php artisan key:generate
     ```
 
-6.  **Run database migrations and seed the database:**
+5.  **Start Laravel Sail:**
     ```bash
-    ./vendor/bin/sail artisan migrate --seed
+    ./vendor/bin/sail up -d
+    ```
+    This will build and start the necessary Docker containers (PHP, Nginx, MySQL/MariaDB, Redis, etc.). It may take a few minutes the first time.
+
+6.  **Run database migrations:**
+    ```bash
+    ./vendor/bin/sail artisan migrate
     ```
 
-    _Note: The seeder will create an admin user (`admin@example.com` / `password`) and 5 regular users with 2 addresses each._
+7.  **Run seeders (optional, for test data):**
+    ```bash
+    ./vendor/bin/sail artisan db:seed
+    ```
 
-7.  **Access the API:**
-    The API will be available at `http://localhost` (or the port configured in your `.env` file).
+8.  **The application will be available at:** `http://localhost`
 
-## Running Tests
+## 🧪 Running Tests
 
-To run the feature tests, execute the following command:
+To ensure the quality and correct functioning of the API, run the automated tests with PHPUnit.
 
 ```bash
-./vendor/bin/sail test
+./vendor/bin/sail artisan test
 ```
 
-## API Documentation
+## 💡 API Usage Examples
 
-### Authentication
+You can use tools like Postman, Insomnia, or `curl` to interact with the API.
 
-| Endpoint | HTTP Verb | Description | Example Payload | Example Response |
-| :------- | :-------- | :---------- | :-------------- | :--------------- |
-| `/api/login` | `POST` | Authenticate a user and return an API token. | `{"email": "user@example.com", "password": "password"}` | `{"message": "Login successful", "token": "...", "user": {...}}` |
-| `/api/logout` | `POST` | Revoke the current user's API token. | (None) | `{"message": "Logout successful"}` |
-| `/api/me` | `GET` | Get the authenticated user's profile. | (None) | `{"data": {...}}` |
+### 1. User Registration (Public)
 
-### Users
+*   **Endpoint:** `POST /api/users`
+*   **Request Body (JSON):**
+    ```json
+    {
+        "name": "New User",
+        "email": "new@example.com",
+        "password": "password",
+        "password_confirmation": "password",
+        "cpf": "123.456.789-01",
+        "phone": "11987654322"
+    }
+    ```
+*   **Success Response (201 Created):**
+    ```json
+    {
+        "data": {
+            "id": 1,
+            "name": "New User",
+            "email": "new@example.com",
+            "cpf": "123.456.789-01",
+            "phone": "11987654322",
+            "created_at": "2023-10-27T10:00:00.000000Z",
+            "updated_at": "2023-10-27T10:00:00.000000Z"
+        }
+    }
+    ```
 
-| Endpoint | HTTP Verb | Description | Example Payload | Example Response |
-| :------- | :-------- | :---------- | :-------------- | :--------------- |
-| `/api/users` | `POST` | Register a new user. (Public route) | `{"name": "John Doe", "email": "john@example.com", "password": "password", "password_confirmation": "password", "cpf": "12345678901", "phone": "11987654321"}` | `{"data": {...}}` (Status 201) |
-| `/api/users` | `GET` | Get a list of all users. (Admin only) | (None) | `{"data": [{...}, {...}]}` |
-| `/api/users/{id}` | `GET` | Get a specific user's profile. (Self or Admin) | (None) | `{"data": {...}}` |
-| `/api/users/{id}` | `PUT` | Update a user's profile. (Self or Admin) | `{"name": "Updated Name", "phone": "9988776655"}` | `{"data": {...}}` |
-| `/api/users/{id}` | `DELETE` | Soft delete a user. (Self or Admin) | (None) | (Status 204, No Content) |
+### 2. User Login
 
-### Addresses
+*   **Endpoint:** `POST /api/login`
+*   **Request Body (JSON):**
+    ```json
+    {
+        "email": "new@example.com",
+        "password": "password"
+    }
+    ```
+*   **Success Response (200 OK):**
+    ```json
+    {
+        "token": "YOUR_JWT_TOKEN_HERE"
+    }
+    ```
+    **Save this token!** It will be used to authenticate subsequent requests.
 
-| Endpoint | HTTP Verb | Description | Example Payload | Example Response |
-| :------- | :-------- | :---------- | :-------------- | :--------------- |
-| `/api/users/{user_id}/addresses` | `GET` | Get all addresses for a specific user. (Self or Admin) | (None) | `{"data": [{...}, {...}]}` |
-| `/api/users/{user_id}/addresses` | `POST` | Create a new address for a user. (Self or Admin) | `{"street": "Main St", "number": "123", "neighborhood": "Downtown", "complement": "Apt 1", "zip_code": "12345-678"}` | `{"data": {...}}` (Status 201) |
-| `/api/users/{user_id}/addresses/{id}` | `GET` | Get a specific address for a user. (Self or Admin) | (None) | `{"data": {...}}` |
-| `/api/users/{user_id}/addresses/{id}` | `PUT` | Update a specific address for a user. (Self or Admin) | `{"street": "New Street", "number": "456"}` | `{"data": {...}}` |
-| `/api/users/{user_id}/addresses/{id}` | `DELETE` | Delete a specific address for a user. (Self or Admin) | (None) | (Status 204, No Content) |
+### 3. Get Authenticated User Profile
+
+*   **Endpoint:** `GET /api/me`
+*   **Headers:**
+    *   `Authorization: Bearer YOUR_JWT_TOKEN_HERE`
+*   **Success Response (200 OK):** Returns the authenticated user's data.
+
+### 4. List User Addresses
+
+*   **Endpoint:** `GET /api/users/{user_id}/addresses`
+*   **Headers:**
+    *   `Authorization: Bearer YOUR_JWT_TOKEN_HERE`
+*   **Success Response (200 OK):** Returns a list of addresses.
+
+### 5. Create Address for a User
+
+*   **Endpoint:** `POST /api/users/{user_id}/addresses`
+*   **Headers:**
+    *   `Authorization: Bearer YOUR_JWT_TOKEN_HERE`
+*   **Request Body (JSON):**
+    ```json
+    {
+        "user_id": 1, // ID of the user to whom the address belongs
+        "street": "Example Street",
+        "number": "123",
+        "neighborhood": "Downtown",
+        "complement": "Apt 10",
+        "zip_code": "01000-000"
+    }
+    ```
+*   **Success Response (201 Created):** Returns the created address data.
+
+## 🛑 Stopping Laravel Sail
+
+To stop the Docker containers:
+
+```bash
+./vendor/bin/sail down
+```
+
+## 🤝 Contributing
+
+Instructions on how to contribute to the project (optional).
+
+## 📄 License
+
+Project license information (optional).

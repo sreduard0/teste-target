@@ -104,9 +104,9 @@ class UserController extends Controller
      * tem permissão para remover o usuário alvo.
      *
      * @param User $user O modelo do usuário (resolvido via Route Model Binding).
-     * @return JsonResponse Resposta JSON vazia com status 204.
+     * @return \Illuminate\Http\Response Resposta vazia com status 204.
      */
-    public function destroy(User $user): JsonResponse
+    public function destroy(User $user): \Illuminate\Http\Response
     {
         Gate::authorize('delete', $user);
 

@@ -12,7 +12,9 @@ class AuthTest extends TestCase
     use RefreshDatabase, WithFaker;
 
     /**
-     * Test if a user can log in successfully.
+     * @testdox Deve permitir que um usuário faça login com credenciais válidas.
+     * Verifica se o login retorna um token e os dados do usuário com status 200.
+     * @return void
      */
     public function test_it_should_login_a_user_successfully(): void
     {
@@ -39,7 +41,9 @@ class AuthTest extends TestCase
     }
 
     /**
-     * Test if login fails with invalid credentials.
+     * @testdox Deve falhar ao tentar fazer login com credenciais inválidas.
+     * Verifica se o sistema retorna um erro de validação (422) para credenciais incorretas.
+     * @return void
      */
     public function test_it_should_fail_to_login_with_invalid_credentials(): void
     {
@@ -53,7 +57,9 @@ class AuthTest extends TestCase
     }
 
     /**
-     * Test if an authenticated user can log out.
+     * @testdox Deve permitir que um usuário autenticado faça logout.
+     * Verifica se o logout invalida o token do usuário e retorna status 200.
+     * @return void
      */
     public function test_it_should_logout_an_authenticated_user(): void
     {

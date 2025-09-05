@@ -13,7 +13,9 @@ class UserTest extends TestCase
     use RefreshDatabase, WithFaker;
 
     /**
-     * Test if a new user can be created successfully.
+     * @testdox Deve criar um novo usuário com sucesso.
+     * Verifica se a API retorna status 201 e a estrutura JSON esperada após a criação de um usuário válido.
+     * @return void
      */
     public function test_it_should_create_a_new_user_successfully(): void
     {
@@ -42,7 +44,9 @@ class UserTest extends TestCase
     }
 
     /**
-     * Test if user creation fails with invalid data.
+     * @testdox Deve falhar ao criar um usuário com dados inválidos.
+     * Verifica se a API retorna status 422 e erros de validação para dados de usuário inválidos.
+     * @return void
      */
     public function test_it_should_fail_to_create_a_user_with_invalid_data(): void
     {
@@ -58,7 +62,9 @@ class UserTest extends TestCase
     }
 
     /**
-     * Test if an authenticated user can view their own profile.
+     * @testdox Deve permitir que um usuário autenticado visualize seu próprio perfil.
+     * Verifica se um usuário pode acessar seus próprios dados de perfil com status 200.
+     * @return void
      */
     public function test_it_should_allow_an_authenticated_user_to_view_their_own_profile(): void
     {
@@ -92,7 +98,9 @@ class UserTest extends TestCase
     }
 
     /**
-     * Test if an admin can view any user's profile.
+     * @testdox Deve permitir que um administrador visualize o perfil de qualquer usuário.
+     * Verifica se um usuário com role 'admin' pode acessar o perfil de qualquer outro usuário com status 200.
+     * @return void
      */
     public function test_it_should_allow_an_admin_to_view_any_user_profile(): void
     {
@@ -107,7 +115,9 @@ class UserTest extends TestCase
     }
 
     /**
-     * Test if a user can update their own profile.
+     * @testdox Deve permitir que um usuário atualize seu próprio perfil.
+     * Verifica se um usuário pode atualizar seus próprios dados de perfil com status 200.
+     * @return void
      */
     public function test_it_should_allow_a_user_to_update_their_own_profile(): void
     {
@@ -128,7 +138,9 @@ class UserTest extends TestCase
     }
 
     /**
-     * Test if a user cannot update another user's profile.
+     * @testdox Não deve permitir que um usuário atualize o perfil de outro usuário.
+     * Verifica se um usuário não-admin não pode atualizar o perfil de outro usuário, resultando em 403.
+     * @return void
      */
     public function test_it_should_not_allow_a_user_to_update_another_user_profile(): void
     {
@@ -184,7 +196,9 @@ class UserTest extends TestCase
     }
 
     /**
-     * Test if a user cannot delete another user's profile.
+     * @testdox Não deve permitir que um usuário exclua o perfil de outro usuário.
+     * Verifica se um usuário não-admin não pode excluir o perfil de outro usuário, resultando em 403.
+     * @return void
      */
     public function test_it_should_not_allow_a_user_to_delete_another_user_profile(): void
     {
@@ -201,7 +215,9 @@ class UserTest extends TestCase
     }
 
     /**
-     * Test if an admin can delete any user's profile.
+     * @testdox Deve permitir que um administrador exclua o perfil de qualquer usuário.
+     * Verifica se um usuário com role 'admin' pode excluir o perfil de qualquer outro usuário com status 204.
+     * @return void
      */
     public function test_it_should_allow_an_admin_to_delete_any_user_profile(): void
     {

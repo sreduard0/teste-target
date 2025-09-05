@@ -19,7 +19,7 @@ Certifique-se de ter os seguintes softwares instalados em sua máquina:
 
 1.  **Clone o repositório:**
     ```bash
-    git clone <URL_DO_REPOSITORIO>
+    git clone https://github.com/sreduard0/teste-target.git
     cd teste-target # Ou o nome da pasta do seu projeto
     ```
 

@@ -11,9 +11,8 @@ use App\Models\User;
 use App\Services\AddressService;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Response;
 
 class AddressController extends Controller
 {
@@ -146,9 +145,9 @@ class AddressController extends Controller
      *
      * @param User $user O modelo do usuário (resolvido via Route Model Binding).
      * @param Address $address O modelo do endereço (resolvido via Route Model Binding).
-     * @return JsonResponse Resposta JSON vazia com status 204.
+     * @return \Illuminate\Http\Response Resposta vazia com status 204.
      */
-    public function destroy(User $user, Address $address): JsonResponse
+    public function destroy(User $user, Address $address): Response | JsonResponse
     {
         // Autoriza a exclusão do usuário (que inclui remover endereços).
         Gate::authorize('delete', $user);

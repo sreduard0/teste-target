@@ -21,7 +21,9 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @testdox Deve retornar todos os usuários
+     * @testdox Deve retornar todos os usuários.
+     * Verifica se o método `getAllUsers` do serviço chama corretamente o método `getAll` do repositório
+     * e retorna a coleção de usuários.
      * @return void
      */
     public function it_should_return_all_users(): void
@@ -37,7 +39,9 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @testdox Deve encontrar um usuário pelo ID
+     * @testdox Deve encontrar um usuário pelo ID.
+     * Verifica se o método `findUserById` do serviço chama corretamente o método `findById` do repositório
+     * com o ID fornecido e retorna o modelo de usuário.
      * @return void
      */
     public function it_should_find_a_user_by_id(): void
@@ -55,7 +59,9 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @testdox Deve criar um novo usuário
+     * @testdox Deve criar um novo usuário.
+     * Verifica se o método `createUser` do serviço chama corretamente o método `create` do repositório
+     * com os dados fornecidos e retorna o modelo de usuário criado.
      * @return void
      */
     public function it_should_create_a_new_user(): void
@@ -73,7 +79,9 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @testdox Deve atualizar um usuário existente
+     * @testdox Deve atualizar um usuário existente.
+     * Verifica se o método `updateUser` do serviço chama corretamente o método `update` do repositório
+     * com o ID e os dados fornecidos e retorna o modelo de usuário atualizado.
      * @return void
      */
     public function it_should_update_an_existing_user(): void
@@ -92,7 +100,9 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @testdox Deve excluir um usuário
+     * @testdox Deve excluir um usuário.
+     * Verifica se o método `deleteUser` do serviço chama corretamente o método `delete` do repositório
+     * com o ID fornecido e retorna `true` em caso de sucesso.
      * @return void
      */
     public function it_should_delete_a_user(): void

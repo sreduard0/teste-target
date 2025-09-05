@@ -21,7 +21,9 @@ class AddressServiceTest extends TestCase
     }
 
     /**
-     * @testdox Deve retornar todos os endereços para um usuário específico
+     * @testdox Deve retornar todos os endereços para um usuário específico.
+     * Verifica se o método `getAddressesByUser` do serviço chama corretamente o método `getByUser` do repositório
+     * com o ID do usuário e retorna a coleção de endereços.
      * @return void
      */
     public function it_should_return_all_addresses_for_a_specific_user(): void
@@ -39,7 +41,9 @@ class AddressServiceTest extends TestCase
     }
 
     /**
-     * @testdox Deve encontrar um endereço pelo ID
+     * @testdox Deve encontrar um endereço pelo ID.
+     * Verifica se o método `findAddressById` do serviço chama corretamente o método `findById` do repositório
+     * com o ID fornecido e retorna o modelo de endereço.
      * @return void
      */
     public function it_should_find_an_address_by_id(): void
@@ -57,7 +61,9 @@ class AddressServiceTest extends TestCase
     }
 
     /**
-     * @testdox Deve criar um novo endereço
+     * @testdox Deve criar um novo endereço.
+     * Verifica se o método `createAddress` do serviço chama corretamente o método `create` do repositório
+     * com os dados fornecidos e retorna o modelo de endereço criado.
      * @return void
      */
     public function it_should_create_a_new_address(): void

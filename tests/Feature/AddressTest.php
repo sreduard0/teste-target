@@ -13,7 +13,9 @@ class AddressTest extends TestCase
     use RefreshDatabase, WithFaker;
 
     /**
-     * @testdox Deve listar todos os endereços de um usuário específico
+     * @testdox Deve listar todos os endereços de um usuário específico.
+     * Verifica se a API retorna corretamente todos os endereços associados a um usuário.
+     * Garante que apenas os endereços do usuário alvo são listados.
      * @return void
      */
     public function it_should_list_all_addresses_for_a_specific_user(): void
@@ -30,7 +32,9 @@ class AddressTest extends TestCase
     }
 
     /**
-     * @testdox Deve criar um novo endereço para um usuário
+     * @testdox Deve criar um novo endereço para um usuário.
+     * Verifica se a API permite a criação de um novo endereço para um usuário existente.
+     * Garante que o endereço é persistido no banco de dados e a resposta é 201 Created.
      * @return void
      */
     public function it_should_create_a_new_address_for_a_user(): void
@@ -56,7 +60,9 @@ class AddressTest extends TestCase
     }
 
     /**
-     * @testdox Não deve criar um endereço com dados inválidos
+     * @testdox Não deve criar um endereço com dados inválidos.
+     * Verifica se a API rejeita a criação de endereços com dados incompletos ou inválidos,
+     * retornando status 422 Unprocessable Entity e erros de validação.
      * @return void
      */
     public function it_should_not_create_an_address_with_invalid_data(): void
@@ -77,7 +83,8 @@ class AddressTest extends TestCase
     }
 
     /**
-     * @testdox Deve exibir um endereço específico de um usuário
+     * @testdox Deve exibir um endereço específico de um usuário.
+     * Verifica se a API retorna os detalhes de um endereço específico pertencente ao usuário.
      * @return void
      */
     public function it_should_show_a_specific_address_for_a_user(): void
@@ -93,7 +100,9 @@ class AddressTest extends TestCase
     }
 
     /**
-     * @testdox Não deve exibir um endereço que não pertence ao usuário
+     * @testdox Não deve exibir um endereço que não pertence ao usuário.
+     * Verifica se um usuário não pode visualizar um endereço que não está associado a ele,
+     * mesmo que o endereço exista, resultando em 404 Not Found (ou 403 Forbidden, dependendo da política).
      * @return void
      */
     public function it_should_not_show_an_address_that_does_not_belong_to_the_user(): void
@@ -109,7 +118,9 @@ class AddressTest extends TestCase
     }
 
     /**
-     * @testdox Deve atualizar um endereço existente
+     * @testdox Deve atualizar um endereço existente.
+     * Verifica se a API permite a atualização de um endereço existente de um usuário.
+     * Garante que os dados são atualizados no banco de dados e a resposta é 200 OK.
      * @return void
      */
     public function it_should_update_an_existing_address(): void
@@ -132,7 +143,9 @@ class AddressTest extends TestCase
     }
 
     /**
-     * @testdox Não deve atualizar um endereço que não pertence ao usuário
+     * @testdox Não deve atualizar um endereço que não pertence ao usuário.
+     * Verifica se um usuário não pode atualizar um endereço que não está associado a ele,
+     * resultando em 404 Not Found (ou 403 Forbidden, dependendo da política).
      * @return void
      */
     public function it_should_not_update_an_address_that_does_not_belong_to_the_user(): void
@@ -152,7 +165,9 @@ class AddressTest extends TestCase
     }
 
     /**
-     * @testdox Deve excluir um endereço existente
+     * @testdox Deve excluir um endereço existente.
+     * Verifica se a API permite a exclusão de um endereço existente de um usuário.
+     * Garante que o endereço é removido do banco de dados e a resposta é 204 No Content.
      * @return void
      */
     public function it_should_delete_an_existing_address(): void
@@ -169,7 +184,9 @@ class AddressTest extends TestCase
     }
 
     /**
-     * @testdox Não deve excluir um endereço que não pertence ao usuário
+     * @testdox Não deve excluir um endereço que não pertence ao usuário.
+     * Verifica se um usuário não pode excluir um endereço que não está associado a ele,
+     * resultando em 404 Not Found (ou 403 Forbidden, dependendo da política).
      * @return void
      */
     public function it_should_not_delete_an_address_that_does_not_belong_to_the_user(): void
