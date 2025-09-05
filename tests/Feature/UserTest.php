@@ -74,13 +74,17 @@ class UserTest extends TestCase
     /**
      * Test if a user cannot view another user's profile.
      */
+    /**
+     * @testdox Não deve permitir que um usuário comum visualize o perfil de outro usuário
+     * @return void
+     */
     public function test_it_should_not_allow_a_user_to_view_another_user_profile(): void
     {
-        $user1 = User::factory()->create();
+        $user1 = User::factory()->create(['role' => 'user']); // Garante que user1 não é admin
         $user2 = User::factory()->create();
         $token1 = $user1->createToken('test_token')->plainTextToken;
 
-        $this->actingAs($user1, 'sanctum');
+        // Removido $this->actingAs($user1, 'sanctum'); pois o token já é enviado no header
 
         $response = $this->getJson("/api/users/{$user2->id}", ['Authorization' => 'Bearer ' . $token1]);
 
