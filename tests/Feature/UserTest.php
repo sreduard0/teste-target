@@ -78,10 +78,11 @@ class UserTest extends TestCase
     {
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
+        $token1 = $user1->createToken('test_token')->plainTextToken;
 
-        $this->actingAs($user1); // Autentica $user1 explicitamente
+        $this->actingAs($user1, 'sanctum');
 
-        $response = $this->getJson("/api/users/{$user2->id}"); // Sem o header de Authorization
+        $response = $this->getJson("/api/users/{$user2->id}", ['Authorization' => 'Bearer ' . $token1]);
 
         $response->assertStatus(403);
     }
@@ -129,14 +130,15 @@ class UserTest extends TestCase
     {
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
+        $token1 = $user1->createToken('test_token')->plainTextToken;
 
-        $this->actingAs($user1); // Autentica $user1 explicitamente
+        $this->actingAs($user1, 'sanctum');
 
         $updatedData = [
             'name' => 'Attempted Update',
         ];
 
-        $response = $this->putJson("/api/users/{$user2->id}", $updatedData); // Sem o header de Authorization
+        $response = $this->putJson("/api/users/{$user2->id}", $updatedData, ['Authorization' => 'Bearer ' . $token1]);
 
         $response->assertStatus(403);
     }
@@ -185,9 +187,11 @@ class UserTest extends TestCase
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
 
-        $this->actingAs($user1); // Autentica $user1 explicitamente
+        $token1 = $user1->createToken('test_token')->plainTextToken;
 
-        $response = $this->deleteJson(route('users.destroy', $user2)); // Usar route() helper
+        $this->actingAs($user1, 'sanctum');
+
+        $response = $this->deleteJson(route('users.destroy', $user2), [], ['Authorization' => 'Bearer ' . $token1]);
 
         $response->assertStatus(403);
     }
