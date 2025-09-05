@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Services\UserService;
 use Illuminate\Database\Eloquent\Collection;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 class UserServiceTest extends TestCase
@@ -20,12 +21,9 @@ class UserServiceTest extends TestCase
         $this->userService = new UserService($this->userRepositoryMock);
     }
 
-    /**
-     * @testdox Deve retornar todos os usuários.
-     * Verifica se o método `getAllUsers` do serviço chama corretamente o método `getAll` do repositório
-     * e retorna a coleção de usuários.
-     * @return void
-     */
+    #[TestDox('Deve retornar todos os usuários.')]
+    // Verifica se o método `getAllUsers` do serviço chama corretamente o método `getAll` do repositório
+    // e retorna a coleção de usuários.
     public function it_should_return_all_users(): void
     {
         $expectedUsers = new Collection([new User(), new User()]);
@@ -38,12 +36,9 @@ class UserServiceTest extends TestCase
         $this->assertEquals($expectedUsers, $users);
     }
 
-    /**
-     * @testdox Deve encontrar um usuário pelo ID.
-     * Verifica se o método `findUserById` do serviço chama corretamente o método `findById` do repositório
-     * com o ID fornecido e retorna o modelo de usuário.
-     * @return void
-     */
+    #[TestDox('Deve encontrar um usuário pelo ID.')]
+    // Verifica se o método `findUserById` do serviço chama corretamente o método `findById` do repositório
+    // com o ID fornecido e retorna o modelo de usuário.
     public function it_should_find_a_user_by_id(): void
     {
         $userId = 1;
@@ -58,12 +53,9 @@ class UserServiceTest extends TestCase
         $this->assertEquals($expectedUser, $user);
     }
 
-    /**
-     * @testdox Deve criar um novo usuário.
-     * Verifica se o método `createUser` do serviço chama corretamente o método `create` do repositório
-     * com os dados fornecidos e retorna o modelo de usuário criado.
-     * @return void
-     */
+    #[TestDox('Deve criar um novo usuário.')]
+    // Verifica se o método `createUser` do serviço chama corretamente o método `create` do repositório
+    // com os dados fornecidos e retorna o modelo de usuário criado.
     public function it_should_create_a_new_user(): void
     {
         $userData = ['name' => 'Test User', 'email' => 'test@example.com', 'password' => 'password'];
@@ -78,12 +70,9 @@ class UserServiceTest extends TestCase
         $this->assertEquals($expectedUser, $user);
     }
 
-    /**
-     * @testdox Deve atualizar um usuário existente.
-     * Verifica se o método `updateUser` do serviço chama corretamente o método `update` do repositório
-     * com o ID e os dados fornecidos e retorna o modelo de usuário atualizado.
-     * @return void
-     */
+    #[TestDox('Deve atualizar um usuário existente.')]
+    // Verifica se o método `updateUser` do serviço chama corretamente o método `update` do repositório
+    // com o ID e os dados fornecidos e retorna o modelo de usuário atualizado.
     public function it_should_update_an_existing_user(): void
     {
         $userId = 1;
@@ -99,12 +88,9 @@ class UserServiceTest extends TestCase
         $this->assertEquals($expectedUser, $user);
     }
 
-    /**
-     * @testdox Deve excluir um usuário.
-     * Verifica se o método `deleteUser` do serviço chama corretamente o método `delete` do repositório
-     * com o ID fornecido e retorna `true` em caso de sucesso.
-     * @return void
-     */
+    #[TestDox('Deve excluir um usuário.')]
+    // Verifica se o método `deleteUser` do serviço chama corretamente o método `delete` do repositório
+    // com o ID fornecido e retorna `true` em caso de sucesso.
     public function it_should_delete_a_user(): void
     {
         $userId = 1;

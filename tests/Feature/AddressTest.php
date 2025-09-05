@@ -6,6 +6,7 @@ use App\Models\Address;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\TestDox;
 use Tests\TestCase;
 
 class AddressTest extends TestCase
@@ -31,12 +32,9 @@ class AddressTest extends TestCase
             ->assertJsonCount(3, 'data');
     }
 
-    /**
-     * @testdox Deve criar um novo endereço para um usuário.
-     * Verifica se a API permite a criação de um novo endereço para um usuário existente.
-     * Garante que o endereço é persistido no banco de dados e a resposta é 201 Created.
-     * @return void
-     */
+    #[TestDox('Deve criar um novo endereço para um usuário.')]
+    // Verifica se a API permite a criação de um novo endereço para um usuário existente.
+    // Garante que o endereço é persistido no banco de dados e a resposta é 201 Created.
     public function it_should_create_a_new_address_for_a_user(): void
     {
         $user = User::factory()->create();
@@ -59,12 +57,9 @@ class AddressTest extends TestCase
         $this->assertDatabaseHas('addresses', ['street' => 'Rua Teste', 'user_id' => $user->id]);
     }
 
-    /**
-     * @testdox Não deve criar um endereço com dados inválidos.
-     * Verifica se a API rejeita a criação de endereços com dados incompletos ou inválidos,
-     * retornando status 422 Unprocessable Entity e erros de validação.
-     * @return void
-     */
+    #[TestDox('Não deve criar um endereço com dados inválidos.')]
+    // Verifica se a API rejeita a criação de endereços com dados incompletos ou inválidos,
+    // retornando status 422 Unprocessable Entity e erros de validação.
     public function it_should_not_create_an_address_with_invalid_data(): void
     {
         $user = User::factory()->create();
@@ -82,11 +77,8 @@ class AddressTest extends TestCase
             ->assertJsonValidationErrors(['user_id', 'street', 'zip_code']);
     }
 
-    /**
-     * @testdox Deve exibir um endereço específico de um usuário.
-     * Verifica se a API retorna os detalhes de um endereço específico pertencente ao usuário.
-     * @return void
-     */
+    #[TestDox('Deve exibir um endereço específico de um usuário.')]
+    // Verifica se a API retorna os detalhes de um endereço específico pertencente ao usuário.
     public function it_should_show_a_specific_address_for_a_user(): void
     {
         $user = User::factory()->create();
@@ -99,12 +91,9 @@ class AddressTest extends TestCase
             ->assertJson(['data' => ['id' => $address->id, 'street' => $address->street]]);
     }
 
-    /**
-     * @testdox Não deve exibir um endereço que não pertence ao usuário.
-     * Verifica se um usuário não pode visualizar um endereço que não está associado a ele,
-     * mesmo que o endereço exista, resultando em 404 Not Found (ou 403 Forbidden, dependendo da política).
-     * @return void
-     */
+    #[TestDox('Não deve exibir um endereço que não pertence ao usuário.')]
+    // Verifica se um usuário não pode visualizar um endereço que não está associado a ele,
+    // mesmo que o endereço exista, resultando em 404 Not Found (ou 403 Forbidden, dependendo da política).
     public function it_should_not_show_an_address_that_does_not_belong_to_the_user(): void
     {
         $user1 = User::factory()->create();
@@ -117,12 +106,9 @@ class AddressTest extends TestCase
         $response->assertStatus(404); // Ou 403, dependendo da política exata
     }
 
-    /**
-     * @testdox Deve atualizar um endereço existente.
-     * Verifica se a API permite a atualização de um endereço existente de um usuário.
-     * Garante que os dados são atualizados no banco de dados e a resposta é 200 OK.
-     * @return void
-     */
+    #[TestDox('Deve atualizar um endereço existente.')]
+    // Verifica se a API permite a atualização de um endereço existente de um usuário.
+    // Garante que os dados são atualizados no banco de dados e a resposta é 200 OK.
     public function it_should_update_an_existing_address(): void
     {
         $user = User::factory()->create();
@@ -142,12 +128,9 @@ class AddressTest extends TestCase
         $this->assertDatabaseHas('addresses', ['id' => $address->id, 'street' => 'Rua Atualizada']);
     }
 
-    /**
-     * @testdox Não deve atualizar um endereço que não pertence ao usuário.
-     * Verifica se um usuário não pode atualizar um endereço que não está associado a ele,
-     * resultando em 404 Not Found (ou 403 Forbidden, dependendo da política).
-     * @return void
-     */
+    #[TestDox('Não deve atualizar um endereço que não pertence ao usuário.')]
+    // Verifica se um usuário não pode atualizar um endereço que não está associado a ele,
+    // resultando em 404 Not Found (ou 403 Forbidden, dependendo da política).
     public function it_should_not_update_an_address_that_does_not_belong_to_the_user(): void
     {
         $user1 = User::factory()->create();
@@ -164,12 +147,9 @@ class AddressTest extends TestCase
         $response->assertStatus(404); // Ou 403, dependendo da política exata
     }
 
-    /**
-     * @testdox Deve excluir um endereço existente.
-     * Verifica se a API permite a exclusão de um endereço existente de um usuário.
-     * Garante que o endereço é removido do banco de dados e a resposta é 204 No Content.
-     * @return void
-     */
+    #[TestDox('Deve excluir um endereço existente.')]
+    // Verifica se a API permite a exclusão de um endereço existente de um usuário.
+    // Garante que o endereço é removido do banco de dados e a resposta é 204 No Content.
     public function it_should_delete_an_existing_address(): void
     {
         $user = User::factory()->create();
@@ -183,12 +163,9 @@ class AddressTest extends TestCase
         $this->assertDatabaseMissing('addresses', ['id' => $address->id]);
     }
 
-    /**
-     * @testdox Não deve excluir um endereço que não pertence ao usuário.
-     * Verifica se um usuário não pode excluir um endereço que não está associado a ele,
-     * resultando em 404 Not Found (ou 403 Forbidden, dependendo da política).
-     * @return void
-     */
+    #[TestDox('Não deve excluir um endereço que não pertence ao usuário.')]
+    // Verifica se um usuário não pode excluir um endereço que não está associado a ele,
+    // resultando em 404 Not Found (ou 403 Forbidden, dependendo da política).
     public function it_should_not_delete_an_address_that_does_not_belong_to_the_user(): void
     {
         $user1 = User::factory()->create();
