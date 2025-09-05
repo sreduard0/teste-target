@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -28,7 +27,8 @@ class UserRepository implements UserRepositoryInterface
      */
     public function findById(int $id): ?Model
     {
-        return User::find($id);
+        // Exemplo de eager loading: se os endereços do usuário forem frequentemente necessários
+        return User::with('addresses')->find($id);
     }
 
     /**
@@ -39,7 +39,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function create(array $data): Model
     {
-        $data['password'] = Hash::make($data['password']);
+        // A senha é hasheada automaticamente pelo cast 'hashed' no modelo User.
         return User::create($data);
     }
 
@@ -54,9 +54,7 @@ class UserRepository implements UserRepositoryInterface
     {
         $user = User::find($id);
         if ($user) {
-            if (isset($data['password'])) {
-                $data['password'] = Hash::make($data['password']);
-            }
+            // A senha é hasheada automaticamente pelo cast 'hashed' no modelo User, se presente.
             $user->update($data);
         }
         return $user;

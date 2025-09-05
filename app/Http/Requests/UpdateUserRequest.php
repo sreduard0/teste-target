@@ -2,17 +2,33 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
+use App\Rules\CpfFormat;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {
-        return true;
+        // Obtém o usuário alvo da rota (via Route Model Binding)
+        $user = $this->route('user');
+
+        // Se o usuário alvo não for encontrado (o que Route Model Binding já faria),
+        // ou se não houver usuário autenticado, nega a autorização.
+        if (! $user instanceof User || ! $this->user()) {
+            return false;
+        }
+
+        // Autoriza se o usuário autenticado pode atualizar o usuário alvo
+        // (ex: próprio perfil ou se for admin).
+        return Gate::allows('update', $user);
     }
 
     /**
@@ -32,7 +48,7 @@ class UpdateUserRequest extends FormRequest
             'email' => ['sometimes', 'string', 'email', 'max:255', Rule::unique('users')->ignore($userId)],
             'password' => ['sometimes', 'string', 'min:8'],
             'phone' => ['nullable', 'string', 'max:20'],
-            'cpf' => ['sometimes', 'string', 'max:14', Rule::unique('users')->ignore($userId)],
+            'cpf' => ['sometimes', 'string', 'max:14', Rule::unique('users')->ignore($userId), new CpfFormat()],
             'role' => ['sometimes', 'string', 'in:admin,user'],
         ];
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,14 +15,16 @@ use Illuminate\Support\Facades\Gate;
 class UserController extends Controller
 {
     /**
+     * Serviço para operações relacionadas a usuários.
+     *
      * @var UserService
      */
     protected UserService $userService;
 
     /**
-     * UserController constructor.
+     * Construtor do UserController.
      *
-     * @param UserService $userService
+     * @param UserService $userService Serviço de usuários.
      */
     public function __construct(UserService $userService)
     {
@@ -29,22 +32,29 @@ class UserController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Lista todos os usuários do sistema.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * Este método recupera todos os usuários. A autorização é verificada
+     * para garantir que o usuário autenticado tem permissão para visualizar
+     * a lista completa de usuários (ex: apenas administradores).
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection Coleção de recursos de usuário.
      */
     public function index()
     {
-        Gate::authorize('viewAny', \App\Models\User::class);
+        Gate::authorize('viewAny', User::class);
         $users = $this->userService->getAllUsers();
         return UserResource::collection($users);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena um novo usuário no sistema.
      *
-     * @param StoreUserRequest $request
-     * @return UserResource
+     * Este método cria um novo usuário. A validação é feita via StoreUserRequest.
+     * Esta rota é geralmente pública para permitir o registro de novos usuários.
+     *
+     * @param StoreUserRequest $request Requisição de armazenamento de usuário.
+     * @return UserResource Recurso do usuário recém-criado.
      */
     public function store(StoreUserRequest $request): UserResource
     {
@@ -53,64 +63,56 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Exibe um usuário específico.
      *
-     * @param int $id
-     * @return UserResource|JsonResponse
+     * Este método recupera e exibe um usuário específico. A autorização é verificada
+     * para garantir que o usuário autenticado tem permissão para visualizar o usuário alvo.
+     *
+     * @param User $user O modelo do usuário (resolvido via Route Model Binding).
+     * @return UserResource Recurso do usuário.
      */
-    public function show(int $id)
+    public function show(User $user)
     {
-        $user = $this->userService->findUserById($id);
-
-        if (! $user) {
-            return response()->json(['message' => 'User not found'], 404);
-        }
-
         Gate::authorize('view', $user);
 
         return new UserResource($user);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza um usuário específico.
      *
-     * @param UpdateUserRequest $request
-     * @param int $id
-     * @return UserResource|JsonResponse
+     * Este método atualiza um usuário existente. A validação é feita via UpdateUserRequest
+     * e a autorização garante que o usuário autenticado tem permissão para modificar o usuário alvo.
+     *
+     * @param UpdateUserRequest $request Requisição de atualização de usuário.
+     * @param User $user O modelo do usuário (resolvido via Route Model Binding).
+     * @return UserResource Recurso do usuário atualizado.
      */
-    public function update(UpdateUserRequest $request, int $id)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $user = $this->userService->findUserById($id);
-
-        if (! $user) {
-            return response()->json(['message' => 'User not found'], 404);
-        }
-
         Gate::authorize('update', $user);
 
-        $updatedUser = $this->userService->updateUser($id, $request->validated());
+        $updatedUser = $this->userService->updateUser($user->id, $request->validated());
 
         return new UserResource($updatedUser);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove um usuário específico.
      *
-     * @param int $id
-     * @return JsonResponse
+     * Este método exclui um usuário existente. A autorização garante que o usuário autenticado
+     * tem permissão para remover o usuário alvo.
+     *
+     * @param User $user O modelo do usuário (resolvido via Route Model Binding).
+     * @return JsonResponse Resposta JSON vazia com status 204.
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(User $user): JsonResponse
     {
-        $user = $this->userService->findUserById($id);
-
-        if (! $user) {
-            return response()->json(['message' => 'User not found'], 404);
-        }
-
         Gate::authorize('delete', $user);
 
-        $this->userService->deleteUser($id);
+        $this->userService->deleteUser($user->id);
 
-        return response()->json(['message' => 'User deleted successfully'], 204);
+        // Retorna 204 No Content, sem corpo, conforme especificação HTTP.
+        return response()->noContent();
     }
 }

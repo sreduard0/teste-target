@@ -12,6 +12,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
 
+    // Rotas de usuário com Route Model Binding
     Route::apiResource('users', UserController::class)->except(['store']);
-    Route::apiResource('users.addresses', AddressController::class);
+
+    // Rotas de endereço aninhadas com Route Model Binding
+    Route::apiResource('users.addresses', AddressController::class)->parameters([
+        'addresses' => 'address',
+        'users' => 'user',
+    ]);
 });

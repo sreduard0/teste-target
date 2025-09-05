@@ -1,73 +1,165 @@
-# API UserFlow (Laravel 12 + Sail)
+# Desafio Técnico: API REST para Gerenciamento de Usuários e Endereços
 
-Este projeto implementa uma API RESTful para gerenciamento de usuários e endereços, construído com Laravel 12 e PHP 8.3, e projetado para desenvolvimento com Laravel Sail (Docker).
+Este projeto implementa uma API RESTful para gerenciamento de usuários e seus respectivos endereços, com autenticação JWT. Foi desenvolvido utilizando Laravel 12 e PHP 8+, com suporte a Laravel Sail para ambiente de desenvolvimento.
 
-## Funcionalidades
+## 🚀 Começando
 
--   **Arquitetura em Camadas:** Separação estrita de Controllers, Services e Repositories para responsabilidades claras.
--   **Princípios S.O.L.I.D.:** Aderência aos princípios S.O.L.I.D., especialmente Responsabilidade Única e Inversão de Dependência.
--   **Desenvolvimento Orientado a Testes (TDD):** Testes de funcionalidade abrangentes usando Pest para todos os endpoints da API, cobrindo cenários de sucesso, erros de validação, não encontrado e não autorizado.
--   **Form Requests:** Validação de entrada robusta usando Form Requests do Laravel.
--   **API Resources:** Respostas JSON padronizadas e prevenção de vazamento de dados sensíveis usando API Resources do Laravel.
--   **Autenticação:** Autenticação de API segura com Laravel Sanctum.
--   **Padrão Repository:** Abstração do acesso ao banco de dados com interfaces para melhor manutenibilidade e testabilidade.
--   **Soft Deletes:** Usuários podem ser excluídos de forma lógica (*soft-deleted*), permitindo recuperação.
--   **Policies:** Controle de autorização refinado para gerenciamento de usuários e endereços.
+Siga as instruções abaixo para configurar e executar o projeto em seu ambiente local.
 
-## Pré-requisitos
+### Pré-requisitos
 
-Antes de começar, certifique-se de ter o seguinte instalado em seu sistema:
+Certifique-se de ter os seguintes softwares instalados em sua máquina:
 
--   [Docker Desktop](https://www.docker.com/products/docker-desktop)
+*   **Docker Desktop:** Necessário para rodar o Laravel Sail.
+*   **PHP (opcional, mas recomendado para Composer):** Versão 8.2 ou superior.
+*   **Composer:** Gerenciador de dependências do PHP.
+*   **Node.js e npm/Yarn (opcional, para frontend se houver):** Para compilar assets, embora não seja o foco principal desta API.
 
-## Instalação e Execução
-
-Siga estes passos para configurar e executar o projeto:
+### Instalação e Configuração
 
 1.  **Clone o repositório:**
     ```bash
-    git clone https://github.com/sreduard0/teste-target.git
-    cd teste-target
+    git clone <URL_DO_REPOSITORIO>
+    cd teste-target # Ou o nome da pasta do seu projeto
     ```
 
 2.  **Instale as dependências do Composer:**
     ```bash
-    docker run --rm \
-        -u "$(id -u):$(id -g)" \
-        -v "$(pwd):/var/www/html" \
-        -w /var/www/html \
-        laravelsail/php83-composer:latest \
-        composer install --ignore-platform-reqs
+    composer install
     ```
 
-3.  **Inicie o Laravel Sail (contêineres Docker):**
-    ```bash
-    ./vendor/bin/sail up -d
-    ```
-
-4.  **Copie o arquivo de ambiente:**
+3.  **Configure o ambiente:**
+    Crie o arquivo `.env` a partir do `.env.example`:
     ```bash
     cp .env.example .env
     ```
 
-5.  **Gere a chave da aplicação:**
+4.  **Gere a chave da aplicação:**
     ```bash
-    ./vendor/bin/sail artisan key:generate
+    php artisan key:generate
     ```
 
-6.  **Execute as migrações e popule o banco de dados:**
+5.  **Inicie o Laravel Sail:**
     ```bash
-    ./vendor/bin/sail artisan migrate --seed
+    ./vendor/bin/sail up -d
+    ```
+    Isso irá construir e iniciar os containers Docker necessários (PHP, Nginx, MySQL/MariaDB, Redis, etc.). Pode levar alguns minutos na primeira vez.
+
+6.  **Execute as migrações do banco de dados:**
+    ```bash
+    ./vendor/bin/sail artisan migrate
     ```
 
-    *Nota: O seeder criará um usuário administrador (`admin@example.com` / `password`) e 5 usuários comuns com 2 endereços cada.*
+7.  **Execute os seeders (opcional, para dados de teste):**
+    ```bash
+    ./vendor/bin/sail artisan db:seed
+    ```
 
-7.  **Acesse a API:**
-    A API estará disponível em `http://localhost` (ou na porta configurada em seu arquivo `.env`).
+8.  **A aplicação estará disponível em:** `http://localhost`
 
-## Executando Testes
+## 🧪 Executando os Testes
 
-Para executar os testes de funcionalidade, execute o seguinte comando:
+Para garantir a qualidade e o correto funcionamento da API, execute os testes automatizados com PHPUnit.
 
 ```bash
-./vendor/bin/sail test
+./vendor/bin/sail artisan test
+```
+
+## 💡 Exemplos de Uso da API
+
+Você pode usar ferramentas como Postman, Insomnia ou `curl` para interagir com a API.
+
+### 1. Registro de Usuário (Público)
+
+*   **Endpoint:** `POST /api/users`
+*   **Corpo da Requisição (JSON):**
+    ```json
+    {
+        "name": "Novo Usuário",
+        "email": "novo@example.com",
+        "password": "password",
+        "password_confirmation": "password",
+        "cpf": "123.456.789-01",
+        "phone": "11987654322"
+    }
+    ```
+*   **Resposta de Sucesso (201 Created):**
+    ```json
+    {
+        "data": {
+            "id": 1,
+            "name": "Novo Usuário",
+            "email": "novo@example.com",
+            "cpf": "123.456.789-01",
+            "phone": "11987654322",
+            "created_at": "2023-10-27T10:00:00.000000Z",
+            "updated_at": "2023-10-27T10:00:00.000000Z"
+        }
+    }
+    ```
+
+### 2. Login de Usuário
+
+*   **Endpoint:** `POST /api/login`
+*   **Corpo da Requisição (JSON):**
+    ```json
+    {
+        "email": "novo@example.com",
+        "password": "password"
+    }
+    ```
+*   **Resposta de Sucesso (200 OK):**
+    ```json
+    {
+        "token": "SEU_TOKEN_JWT_AQUI"
+    }
+    ```
+    **Guarde este token!** Ele será usado para autenticar as requisições subsequentes.
+
+### 3. Obter Perfil do Usuário Autenticado
+
+*   **Endpoint:** `GET /api/me`
+*   **Headers:**
+    *   `Authorization: Bearer SEU_TOKEN_JWT_AQUI`
+*   **Resposta de Sucesso (200 OK):** Retorna os dados do usuário autenticado.
+
+### 4. Listar Endereços de um Usuário
+
+*   **Endpoint:** `GET /api/users/{user_id}/addresses`
+*   **Headers:**
+    *   `Authorization: Bearer SEU_TOKEN_JWT_AQUI`
+*   **Resposta de Sucesso (200 OK):** Retorna uma lista de endereços.
+
+### 5. Criar Endereço para um Usuário
+
+*   **Endpoint:** `POST /api/users/{user_id}/addresses`
+*   **Headers:**
+    *   `Authorization: Bearer SEU_TOKEN_JWT_AQUI`
+*   **Corpo da Requisição (JSON):**
+    ```json
+    {
+        "user_id": 1, // ID do usuário ao qual o endereço pertence
+        "street": "Rua Exemplo",
+        "number": "123",
+        "neighborhood": "Centro",
+        "complement": "Apto 10",
+        "zip_code": "01000-000"
+    }
+    ```
+*   **Resposta de Sucesso (201 Created):** Retorna os dados do endereço criado.
+
+## 🛑 Parando o Laravel Sail
+
+Para parar os containers Docker:
+
+```bash
+./vendor/bin/sail down
+```
+
+## 🤝 Contribuição
+
+Instruções sobre como contribuir para o projeto (opcional).
+
+## 📄 Licença
+
+Informações sobre a licença do projeto (opcional).

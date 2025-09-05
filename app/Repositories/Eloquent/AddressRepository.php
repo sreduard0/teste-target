@@ -28,7 +28,8 @@ class AddressRepository implements AddressRepositoryInterface
      */
     public function findById(int $id): ?Model
     {
-        return Address::find($id);
+        // Exemplo de eager loading: se o usuário do endereço for frequentemente necessário
+        return Address::with('user')->find($id);
     }
 
     /**
